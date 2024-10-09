@@ -1,14 +1,22 @@
 "use client";
 
 import { Canvas } from "@react-three/fiber";
-import { Environment, Float, View } from "@react-three/drei";
-import FloatingCan from "./FloatingCan";
+import { View } from "@react-three/drei";
+import { Suspense } from "react";
+import dynamic from "next/dynamic";
+
+const Loader = dynamic(
+    () => import("@react-three/drei").then((mod) => mod.Loader), {
+        ssr: false
+    }
+)
 
 type Props = {}
 
 export default function ViewCanvas({}: Props) {
   return (
-    <Canvas
+      <>
+      <Canvas
         style={{
             position: "fixed",
             top: 0,
@@ -24,8 +32,12 @@ export default function ViewCanvas({}: Props) {
         camera={{
             fov: 30,
         }}
-    >
-        <View.Port />
+        >
+        <Suspense fallback={null}>
+            <View.Port />
+        </Suspense>
     </Canvas>
+    <Loader />
+    </>
   )
 }
