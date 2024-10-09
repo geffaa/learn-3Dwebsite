@@ -27,7 +27,13 @@
         "fieldset": "Slice Zone",
         "config": {
           "choices": {
-            "caraousel": {
+            "big_text": {
+              "type": "SharedSlice"
+            },
+            "alternating_text": {
+              "type": "SharedSlice"
+            },
+            "carousel": {
               "type": "SharedSlice"
             },
             "sky_dive": {

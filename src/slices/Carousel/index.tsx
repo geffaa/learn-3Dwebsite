@@ -33,7 +33,7 @@ const FLAVORS: {
 /**
  * Props for `carousel`.
  */
-export type CarouselProps = SliceComponentProps<Content.CaraouselSlice>;
+export type CarouselProps = SliceComponentProps<Content.CarouselSlice>;
 
 /**
  * Component for "carousel" Slices.
