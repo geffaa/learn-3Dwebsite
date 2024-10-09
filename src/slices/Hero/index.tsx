@@ -7,8 +7,10 @@ import { useGSAP } from "@gsap/react";
 import { asText, Content } from "@prismicio/client";
 import { PrismicNextImage } from "@prismicio/next";
 import { PrismicRichText, SliceComponentProps } from "@prismicio/react";
+import { View } from "@react-three/drei";
 import gsap from "gsap";
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import Scene from "./Scene";
 
 gsap.registerPlugin(useGSAP, ScrollTrigger)
 
@@ -23,67 +25,75 @@ export type HeroProps = SliceComponentProps<Content.HeroSlice>;
 const Hero = ({ slice }: HeroProps): JSX.Element => {
 
   useGSAP(() => {
+    // Animasi intro
     const introTl = gsap.timeline();
-
+  
     introTl
-    .set(".hero", { opacity: 1 })
-    .from('.hero-header-word', {
-      scale: 3,
-      opacity: 0,
-      ease: "power4.in",
-      delay: 0.3,
-      stagger: 1,
-    })
-    .from(".hero-subheading", {
-      opacity: 0,
-      y:30,
-    },
-    "+=.8",
-    )
-    .from(".hero-body", {
-      opacity: 0,
-      y: 10,
-    })
-    .from(".hero-button", {
-      opacity: 0,
-      y:10,
-      duration: 0.6,
+      .set(".hero", { opacity: 1 })
+      .from('.hero-header-word', {
+        scale: 3,
+        opacity: 0,
+        ease: "power4.in",
+        delay: 0.3,
+        stagger: 1,
+      })
+      .from(".hero-subheading", {
+        opacity: 0,
+        y: 30,
+      }, "+=.8")
+      .from(".hero-body", {
+        opacity: 0,
+        y: 10,
+      })
+      .from(".hero-button", {
+        opacity: 0,
+        y: 10,
+        duration: 0.6,
+      });
+  
+    // Animasi scroll
+    ScrollTrigger.create({
+      trigger: ".hero",
+      start: "top top",
+      end: "bottom bottom",
+      scrub: 1.5,
+      onEnter: () => {
+        gsap.to("body", {
+          backgroundColor: "#D9F99D",
+          duration: 1,
+        });
+      },
+      onLeaveBack: () => {
+        gsap.to("body", {
+          backgroundColor: "#FDE047",
+          duration: 1,
+        });
+      }
     });
-
-    const scrollTl = gsap.timeline({
-      ScrollTrigger: {
-        trigger: ".hero",
-        start: "top top",
-        end: "bottom bottom",
-        scrub: 1.5,
-        markers: true,
-      },
+  
+    // Animasi text-side
+    ScrollTrigger.create({
+      trigger: ".text-side",
+      start: "top 80%",
+      onEnter: () => {
+        gsap.from(".text-side-heading .split-char", {
+          scale: 1.3,
+          y: 40,
+          rotate: -25,
+          opacity: 0,
+          stagger: 0.1,
+          ease: "back.out(3)",
+          duration: 0.5
+        });
+        gsap.from(".text-side-body", {
+          y: 20,
+          opacity: 0,
+          duration: 0.5,
+          delay: 0.5
+        });
+      }
     });
-    
-    scrollTl.fromTo(
-        "body", 
-      {
-        backgroundColor: "#FDE047",
-      },
-      {
-        backgroundColor: "#D 9F99D",
-        overwrite: "auto",
-      },
-      1,
-    ).from(".text-side-heading .split-char", {
-      scale:1.3,
-      y:40,
-      rotate:-25,
-      opacity:0,
-      stagger: .1,
-      ease: "back.out(3)",
-      duration:.5
-    })
-    .from(".text-side-body", {
-      y: 20,
-      opacity: 0,
-    })
-  })
+  });
 
   
   return (
@@ -92,6 +102,9 @@ const Hero = ({ slice }: HeroProps): JSX.Element => {
       data-slice-variation={slice.variation}
       className="opacity-0 hero"
     >
+      <View className="hero-scene pointer-events-none sticky top-0 z-50 -mt-[100vh] hidden h-screen w-screen md:block">
+        <Scene />
+      </View>
       <div className="grid">
         <div className="grid h-screen place-items-center">
           <div className="grid text-center auto-rows-min place-items-center">
