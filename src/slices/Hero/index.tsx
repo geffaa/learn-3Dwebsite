@@ -11,6 +11,8 @@ import { View } from "@react-three/drei";
 import gsap from "gsap";
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import Scene from "./Scene";
+import { Bubbles } from "./Bubbles";
+import { useStore } from "@/hooks/useStore";
 
 gsap.registerPlugin(useGSAP, ScrollTrigger)
 
@@ -23,8 +25,11 @@ export type HeroProps = SliceComponentProps<Content.HeroSlice>;
  * Component for "Hero" Slices.
  */
 const Hero = ({ slice }: HeroProps): JSX.Element => {
+  const ready = useStore((state) => state.ready);
 
   useGSAP(() => {
+    if (!ready) return;
+    
     // Animasi intro
     const introTl = gsap.timeline();
   
@@ -93,7 +98,7 @@ const Hero = ({ slice }: HeroProps): JSX.Element => {
         });
       }
     });
-  });
+  }, {dependencies: [ready]});
 
   
   return (
@@ -104,6 +109,7 @@ const Hero = ({ slice }: HeroProps): JSX.Element => {
     >
       <View className="hero-scene pointer-events-none sticky top-0 z-50 -mt-[100vh] hidden h-screen w-screen md:block">
         <Scene />
+        <Bubbles count={300} speed={2} repeat={true}/>
       </View>
       <div className="grid">
         <div className="grid h-screen place-items-center">
